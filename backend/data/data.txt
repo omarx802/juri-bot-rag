@@ -1,0 +1,63 @@
+Contact Information
+Name: Omar Souid
+
+Email: omar.souid@eniso.u-sousse.tn
+
+Phone Number: +216 94 491 164
+
+LinkedIn: Omar Souid
+
+GitHub: OmarSouid
+
+Address: Sousse, Tunisia
+
+Professional Summary
+Overview: Omar Souid is a Software Engineering student at the National Engineering School of Sousse (ENISo), with a strong foundation in algorithms, data analysis, and full-stack development.
+
+Expertise:
+
+Developing AI-powered and interactive applications, including Discord bots and ERP systems.
+
+Solving complex engineering problems with optimization techniques and modern frameworks.
+
+Passion: Driven by problem-solving and competitive programming, with practical experience in building real-world systems.
+
+Education
+Institution: National Engineering School of Sousse (ENISo)
+Degree: Bachelor of Science in Software Engineering
+Duration: September 2024 – May 2027
+Key Coursework:
+
+Data Structures and Algorithms, Object-Oriented Programming, Data Analysis and Visualization
+
+Probability and Optimization Algorithms
+Involvement: ACM Member (Competitive Programming), Orange TechClub Member
+
+Institution: Monastir Preparatory Engineering Institute (IPEIM)
+Degree: Pre-Engineering (Maths-Physics)
+Duration: September 2022 – June 2024
+Key Coursework:
+
+Probability and Statistics, Linear Algebra, Advanced Mathematical Analysis, Python Programming
+
+Projects
+MiniERP
+Description: Lightweight ERP system tailored for small to medium-sized businesses with a clean UI and robust backend for managing essential business functions.
+
+Technologies Used: NextJS, React, GroqAI, MySQL, ShadCN, TailwindCSS
+
+Outcome: Provided a scalable and extensible framework for internal operations.
+
+Discord Bot
+Description: Multifunctional Discord bot with AI chat using Groq, music streaming, dice games, and alarm scheduling.
+
+Technologies Used: Python, Groq, FFmpeg, pandas, NumPy, matplotlib
+
+Outcome: Created an engaging and feature-rich Discord experience combining entertainment and utility.
+
+Technical Skills
+Programming Languages: Python, C/C++, Java, SQL, TypeScript
+
+Tools and Frameworks: Git, Linux, NextJS, FastAPI, GroqAI, TailwindCSS, React, ShadCN, MySQL
+
+Expertise: Full-stack development, AI integration, modern web frameworks, and database systems
