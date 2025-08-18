@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import io from "socket.io-client";
 import { Send } from "lucide-react";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
+
+const socket = io("http://localhost:5000", {
+  transports: ["websocket"],
+});
 
 interface Message {
   role: "user" | "bot";
@@ -11,7 +16,8 @@ interface Message {
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const [query, setQuery] = useState("");
+  const [constitution, setConstitution] = useState("2014");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -22,27 +28,20 @@ export default function ChatPage() {
   useEffect(scrollToBottom, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!query.trim()) return;
 
-    const userMessage: Message = { role: "user", content: input };
+    const userMessage: Message = { role: "user", content: query };
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    setQuery("");
     setIsTyping(true);
 
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      });
-      const data = await res.json();
-      const botMessage: Message = { role: "bot", content: data.response };
+    socket.emit("query", query, constitution);
+
+    socket.on("response", (response: string) => {
+      const botMessage: Message = { role: "bot", content: response };
       setMessages((prev) => [...prev, botMessage]);
-    } catch (err) {
-      console.error(err);
-    } finally {
       setIsTyping(false);
-    }
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -91,8 +90,8 @@ export default function ChatPage() {
         <div className="p-4 border-t border-gray-700 flex gap-3 bg-gray-800">
           <textarea
             className="flex-1 p-3 rounded-xl bg-gray-700 text-white resize-none focus:outline-none placeholder-gray-400"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
             placeholder="Ask a question..."

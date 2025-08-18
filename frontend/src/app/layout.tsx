@@ -5,8 +5,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chat.vercel.ai'),
-  title: 'Constitution RAG',
-  description: 'constitution RAG chatbot',
+  title: 'Juri-bot RAG',
+  description: 'Juri-bot RAG chatbot',
 };
 
 export const viewport = {
