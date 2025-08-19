@@ -63,14 +63,22 @@ def response_(query, constitution, deployment=deployment):
     retrieved_documents = results['documents'][0]
     information = "\n\n".join(retrieved_documents)
 
+
     messages = [
         {
             "role": "system",
-            "content": "You are a helpful assistant. Your users are asking questions about information contained in an document. You will be shown the user's question, and the relevant information from this document. Answer the user's question using only this information. Be precise as you can. If the information is not present in the document, say 'I don't know'."
+            "content": (
+                "You are JuriBot, an expert legal assistant specialized in Tunisian constitutional law. "
+                "You will be provided with a user's question and relevant excerpts from the Tunisian constitution (either 1959 or 2014, as indicated). "
+                "Use only the provided excerpts to answer the question as clearly, concisely, and accurately as possible. "
+                "If the answer is not explicitly present in the provided information, respond with: 'I don't know based on the given context.' "
+                "If helpful, cite the relevant excerpt(s) in your answer. "
+                "Do not make up information or speculate."
+            )
         },
         {
             "role": "user",
-            "content": f"Question: {query}. \n Information: {information}"
+            "content": f"Question: {query}\n\nRelevant Excerpts:\n{information}"
         }
     ]
 

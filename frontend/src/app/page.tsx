@@ -36,13 +36,19 @@ export default function ChatPage() {
     setIsTyping(true);
 
     socket.emit("query", query, constitution);
+  };
 
-    socket.on("response", (response: string) => {
+  useEffect(() => {
+    const handleResponse = (response: string) => {
       const botMessage: Message = { role: "bot", content: response };
       setMessages((prev) => [...prev, botMessage]);
       setIsTyping(false);
-    });
-  };
+    };
+    socket.on("response", handleResponse);
+    return () => {
+      socket.off("response", handleResponse);
+    };
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -70,7 +76,7 @@ export default function ChatPage() {
                 className={`rounded-xl p-2 max-w-[70%] shadow-md ${
                   msg.role === "user"
                     ? "bg-gray-600 text-white"
-                    : "bg-cyan-700 text-gray-100"
+                    : "bg-pink-900 text-gray-100"
                 }`}
               >
                 {msg.content}
