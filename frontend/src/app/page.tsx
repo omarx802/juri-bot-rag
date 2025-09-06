@@ -1,6 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import io from "socket.io-client";
 import { Send } from "lucide-react";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
@@ -64,6 +71,12 @@ export default function ChatPage() {
     </div>
     <div className="flex flex-col h-screen items-center justify-center bg-transparent text-white p-4">
       <div className="flex flex-col w-full max-w-xl h-full bg-gray-900 opacity-85 rounded-2xl shadow-lg overflow-hidden">
+
+        {messages.length === 0 && (
+          <div className="w-full opacity-80 text-center py-6 bg-gradient-to-r from-cyan-700 text-white text-3xl font-extrabold tracking-wider drop-shadow-lg animate-fade-in">
+            Ask me anything about Tunisian Constitution!
+          </div>
+        )}
         <div className="flex-1 overflow-auto p-6 space-y-4">
           {messages.map((msg, idx) => (
             <div
@@ -92,22 +105,38 @@ export default function ChatPage() {
           )}
           <div ref={messagesEndRef} />
         </div>
-
-        <div className="p-4 border-t border-gray-700 flex gap-3 bg-gray-800">
-          <textarea
-            className="flex-1 p-3 rounded-xl bg-gray-700 text-white resize-none focus:outline-none placeholder-gray-400"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={1}
-            placeholder="Ask a question..."
-          />
-          <button
-            onClick={handleSend}
-            className="px-4 py-3 bg-cyan-700 rounded-full hover:bg-cyan-900 transition"
-          >
-            <Send />
-          </button>
+        <div className="p-4 border-t border-gray-700 flex flex-col gap-2 bg-gray-800">
+          <div className="flex items-center gap-3 mb-2">
+            <label className="text-sm font-semibold text-cyan-300 tracking-wide mr-2" htmlFor="constitution-select">
+              Constitution:
+            </label>
+            <Select value={constitution} onValueChange={setConstitution}>
+              <SelectTrigger id="constitution-select" className="w-56 bg-gray-700 border-cyan-700 text-cyan-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-800 border-cyan-700 text-cyan-200">
+                <SelectItem value="2014">2014 Constitution</SelectItem>
+                <SelectItem value="1959">1959 Constitution</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex gap-3 items-end">
+            <textarea
+              className="flex-1 p-3 rounded-xl bg-gray-700 text-white resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-400 border border-cyan-700"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              rows={1}
+              placeholder="Ask a question..."
+            />
+            <button
+              onClick={handleSend}
+              className="px-4 py-3 bg-gradient-to-br from-cyan-700 to-cyan-900 rounded-full hover:from-cyan-600 hover:to-cyan-800 shadow-lg transition flex items-center justify-center"
+              aria-label="Send"
+            >
+              <Send />
+            </button>
+          </div>
         </div>
       </div>
     </div>

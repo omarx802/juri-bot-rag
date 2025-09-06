@@ -14,13 +14,20 @@ api_version = "2024-12-01-preview"
 
 BASE_DIR = Path(__file__).resolve().parent
 
-# load n chunk
+# load & chunk
 path_1959 = BASE_DIR / "data" / "tunisia1959.txt"
 path_2014 = BASE_DIR / "data" / "tunisia2014.txt"
 data_1959 = process_data(path_1959)
 data_2014 = process_data(path_2014)
 chunks_1959 = chunk(data_1959)
 chunks_2014 = chunk(data_2014)
+# chunking returns dicts; convert to string for ChromaDB
+chunks_1959_dicts = chunk(data_1959)
+chunks_2014_dicts = chunk(data_2014)
+def chunk_to_str(chunk):
+    return f"Title: {chunk['title']}\nArticle: {chunk['article']}\nText: {chunk['text']}"
+chunks_1959 = [chunk_to_str(c) for c in chunks_1959_dicts]
+chunks_2014 = [chunk_to_str(c) for c in chunks_2014_dicts]
 
 # Azure OpenAI client
 client = AzureOpenAI(
@@ -52,7 +59,7 @@ for i in range(0, len(chunks_2014), BATCH_SIZE):
     batch_docs = chunks_2014[i:i+BATCH_SIZE]
     collection_2014.add(ids=batch_ids, documents=batch_docs)
 
-# retrieval ___ index selection
+# retrieval __ index selection
 def response_(query, constitution, deployment=deployment):
     if constitution == "1959":
         collection = collection_1959
@@ -68,17 +75,18 @@ def response_(query, constitution, deployment=deployment):
         {
             "role": "system",
             "content": (
-                "You are JuriBot, an expert legal assistant specialized in Tunisian constitutional law. "
-                "You will be provided with a user's question and relevant excerpts from the Tunisian constitution (either 1959 or 2014, as indicated). "
-                "Use only the provided excerpts to answer the question as clearly, concisely, and accurately as possible. "
-                "If the answer is not explicitly present in the provided information, respond with: 'I don't know based on the given context.' "
-                "If helpful, cite the relevant excerpt(s) in your answer. "
-                "Do not make up information or speculate."
+                "You are JuriBot, an expert legal assistant specialized in the Tunisian constitution. "
+                "You will be provided with a user's question and relevant articles from the constitution. "
+                "Use only the provided information to answer as clearly, concisely, and accurately as possible. "
+                "If the answer requires counting, summarizing, or inferring from the provided articles, do so carefully and explain your reasoning. "
+                "If the answer is not present or cannot be inferred from the provided information, respond with: 'I don't know based on the given context.' "
+                "If helpful, cite the relevant articles in your answer. "
+                "Do not make up information or speculate beyond the provided context."
             )
         },
         {
             "role": "user",
-            "content": f"Question: {query}\n\nRelevant Excerpts:\n{information}"
+            "content": f"Question: {query}\n\nRelevant Articles:\n{information}"
         }
     ]
 
@@ -88,7 +96,7 @@ def response_(query, constitution, deployment=deployment):
     )
     return response.choices[0].message.content
 
-# Flask part
+# flask part
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
